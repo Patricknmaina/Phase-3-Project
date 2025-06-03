@@ -1,5 +1,6 @@
 # python virtual environment
 env/
+venv/
 
 # vscode folder
 .vscode
@@ -9,3 +10,6 @@ env/
 
 # Zone Identifiers
 *.Identifier
+
+# pychache folder
+__pycache__/
