@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy import stats
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 # -----------------Data Preparation-------------------!
@@ -171,7 +172,7 @@ def correlation_heatmap(df):
     # plot the heatmap
     sns.heatmap(
         data=mask,
-        cmap='magma',
+        cmap='viridis',
         annot=True,
         fmt=".1g",
         vmin=-1
@@ -180,3 +181,75 @@ def correlation_heatmap(df):
     # define the title and display plot
     plt.title('Feature Correlatiom Heatmap', fontsize=16)
     plt.show()
+
+
+# function to drop features that are highly correlated with others (have a correlation coefficient > 0.9)
+def drop_highly_correlated_features(df, threshold: float = 0.9, verbose: bool = True):
+    """
+    This function drops features that are highly correlated with others, beyond a specified threshold
+
+    Parameters:
+    -----------
+        df(pd.DataFrame): The input dataframe
+        threshold: float, default=0.9: Correlation threshold for dropping features
+        verbose: bool, default=True: If True, print the names of the dropped features
+
+    Returns:
+    --------
+        df: A new dataframe with highly correlated features removed.
+    """
+
+    # compute the absolute correlation matrix
+    corr_matrix = df.corr(numeric_only=True).abs()
+
+    # mask the upper triangle (including diagonal)
+    mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
+    tri_df = corr_matrix.mask(mask)
+
+    # identify features to drop
+    to_drop = [col for col in tri_df.columns if any(tri_df[col] > threshold)]
+
+    # print the features that are dropped
+    if verbose and to_drop:
+        print(f"Dropping {len(to_drop)} highly correlated features (r > {threshold}): {to_drop}")
+    elif verbose:
+        print("No features exceeded the correlation threshold.")
+
+    # drop the features and return reduced dataframe
+    return df.drop(columns=to_drop, axis=1), to_drop
+
+
+# function to drop outliers(rows where any numerical column has a Z-score > 3)
+def remove_outliers_zscore(df, z_threshold=3.0):
+    """
+    This function returns a new dataframe with rows removed where any numerical column has a Z-score
+    exceeding the given threshold
+
+    Parameters:
+    -----------
+        df(pd.DataFrame): The input dataframe containing both numerical and non-numerical columns.
+        z_threshold: float, default=3.0: All rows where |z-score| > z_threshold for any numeric column will be dropped
+
+    Returns:
+    --------
+        df: A coly of the original DataFrame with outliers removed
+    """
+
+    # separate the numeric columns
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+
+    # Compue the Z-scores for each numeric columns
+    # scipy.stats.zscore will return a masked array if there are NaNs
+    # we then take the absolute value and compare to threshold
+    z_scores = np.abs(stats.zscore(df[numeric_cols], nan_policy='omit'))
+
+    # build a boolean mask: True for rows where all |z| <= threshold
+    # if a particular column contained NaN (and zscore was NaN), we treat it as "not an outlier" here.
+    # replace NaN z-scores with 0 before comparison
+    z_scores = np.nan_to_num(z_scores, nan=0.0)
+    mask = (z_scores <= z_threshold).all(axis=1)
+
+    # use the mask to filter the original dataframe
+    cleaned_df = df.loc[mask].copy()
+
+    return cleaned_df
