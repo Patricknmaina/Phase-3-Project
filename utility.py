@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 # -----------------Data Preparation-------------------!
 # function to check for null and duplicate values, and handle them
@@ -253,3 +254,37 @@ def remove_outliers_zscore(df, z_threshold=3.0):
     cleaned_df = df.loc[mask].copy()
 
     return cleaned_df
+
+
+# -----------------MODELING----------------------
+# function to plot the confusion matrix of each model
+def plot_confusion_matrix(y_true, y_pred, class_labels=None, title='Confusion Matrix', figsize=(6, 5), cmap='viridis'):
+    """
+    This function plots a confusion matrix using a Seaborn heatmap.
+
+    Parameters:
+        y_true: array-like of shape (n_samples,) - True labels
+        y_pred: array-like of shape (n_samples,) - Predicted labels
+        class_labels: list of strings - Names of the target classes
+        title: string - Title of the plot
+        figsize: tuple - Size of the plot
+        cmap: string - Color map for the heatmap
+    """
+
+    # define the confusion matrix
+    conf_matrix = confusion_matrix(y_true, y_pred)
+
+    # plot the confusion matrix
+    plt.figure(figsize=figsize)
+    sns.heatmap(
+        conf_matrix,
+        annot=True,
+        fmt='d',
+        cmap=cmap,
+        xticklabels=class_labels if class_labels else 'auto',
+        yticklabels=class_labels if class_labels else 'auto'
+    )
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.tight_layout()
+    plt.show()
