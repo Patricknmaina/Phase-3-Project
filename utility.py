@@ -111,6 +111,7 @@ def numerical_distribution(df, numerical_features):
 
     # improve layout spacing
     fig.tight_layout()
+    # plt.savefig('images/numerical_distribution.jpg')
     plt.show()
 
 
@@ -182,6 +183,7 @@ def correlation_heatmap(df):
 
     # define the title and display plot
     plt.title('Feature Correlatiom Heatmap', fontsize=16)
+    # plt.savefig('images/feature_heatmap.jpg', dpi=300)
     plt.show()
 
 
