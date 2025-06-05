@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, recall_score, roc_auc_score, accuracy_score
+from sklearn.model_selection import RandomizedSearchCV
 
 # -----------------Data Preparation-------------------!
 # function to check for null and duplicate values, and handle them
@@ -288,3 +289,54 @@ def plot_confusion_matrix(y_true, y_pred, class_labels=None, title='Confusion Ma
     plt.ylabel('True Label')
     plt.tight_layout()
     plt.show()
+
+
+# function for hyperparameter tuning
+def param_random_search(model, param_dist, X, y, n_iter=10, cv=5, verbose=True, n_jobs=-1):
+    """
+    This function performs randomized hyperparameter search with cross-validation.
+
+    Parameters:
+    -----------
+    model : estimator object
+        The classification model to tune.
+    param_dist : dict
+        Dictionary with parameters names (`str`) as keys and distributions or lists of parameters to try.
+    X : pd.DataFrame or np.ndarray
+        Training features.
+    y : pd.Series or np.ndarray
+        Training labels.
+    n_iter : int, default=10
+        Number of parameter settings sampled.
+    cv : int, default=5
+        Number of cross-validation folds.
+    verbose : bool or int
+        Controls the verbosity of the output.
+    n_jobs : int, default=-1
+        Number of jobs to run in parallel (-1 means use all processors).
+
+    Returns:
+    --------
+    RandomizedSearchCV object
+    """
+
+    # instantiate the RandomizedSearchCV function
+    random_search = RandomizedSearchCV(
+        estimator=model,
+        param_distributions=param_dist,
+        n_iter=n_iter,
+        cv=cv,
+        scoring='recall',
+        verbose=verbose,
+        n_jobs=n_jobs
+    )
+
+    # fit the random search with train data
+    random_search.fit(X, y)
+
+    # determing the best parameters, score and estimators
+    print("Best model hyperparameters:", random_search.best_params_)
+    print("Best model accuracy:", random_search.best_score_)
+    print("Best model estimators:", random_search.best_estimator_)
+
+    return random_search
