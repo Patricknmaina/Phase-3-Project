@@ -16,18 +16,18 @@ SyriaTel, a leading telecom provider, is experiencing a significant loss of cust
 
 ### Objectives.
 The main objectives for this project are:
-- To determine the key characteristics and behavior patterns that contribute to customer churn.
+- To determine the key characteristics and behavior patterns that likely contribute to customer churn.
 
 - To build a robust predictive model that will identify customers with a high likelihood of discontinuing their service.
 
 - To provide data-driven insights and recommendations that will proactively engage, and retain high-risk customers.
 
 ## 📊 Dataset
-This analysis and modeling utilizes the [SyriaTel Churn Dataset](https://www.kaggle.com/datasets/becksddf/churn-in-telecoms-dataset) from Kaggle. The dataset includes essential customer-churn attributes such as:
+This analysis and modeling utilizes the [Telecom Churn Dataset](https://www.kaggle.com/datasets/becksddf/churn-in-telecoms-dataset) from Kaggle. The dataset includes essential customer-churn attributes such as:
 
 - **State and Area code**: It contains the different states and area codes of the customers subscribed to SyriaTel company, both who are churning and who are not churning from the company.
 
-- **International and Voice Mail Plans**: It gives directive as to which customers are subscribed to either an International plan, or a voice mail plan, or both, or even none.
+- **International and Voice Mail Plans**: It gives directive as to which customers are subscribed to either an International plan, voice mail plan, both, or even none.
 
 - **Call rates**: It gives information on the different call rates for the customers for day, night, evening, and international calls
 
@@ -68,9 +68,9 @@ To ensure an effective data analysis and predictive modeling strategy, the noteb
 
 - Implementing the `train_test_split` method to split the dataset into training and testing sets (`80/20 split`)
 
-- Training six different types of models to measure performance using `recall` and `ROC-AUC` metrics
+- Training six different types of models to measure performance using `recall` and `ROC-AUC` metrics, with Logistic Regression as the baseline model.
 
-- Plotting the `confusion matrix` to evaluate the rate of true and false positives and negatives.
+- Plotting the `confusion matrix` to evaluate the rate of true and false positives and negatives for each model.
 
 ### 6️⃣ Model Evaluation
 - Plotting `ROC curves` and computing the `AUC scores` of all the six models, and doing a comparison of the curves and the AUC scores.
@@ -105,7 +105,7 @@ Below are three critical visualizations that provide insights into the rate of c
 ![feature_heatmap](images/feature_heatmap.png)
 
 ## 📝 Conclusion
-From my prediction modeling analysis, The XGBoost Classifier model had a recall score of `0.82`, while the Gradient Boosting model achieved a recall score of `0.81`. However, the Gradient Boosting model had a higher AUC score of `0.921`, while the XGBoost model had an AUC score of `0.911`. I was able to meet all my set objectives, which were to build a customer churn prediction model with a recall score of 0.8 and above, and to identify the key features that contribute significantly to customer churn, which include `Customer_Service_Calls`, `Total_Day_Charge`, and `International_Plan`. Due to the nature of the project and the prediction problem, I would recommend the XGBoost classifier model with a higher recall for predicting customer churn rates at SyriaTel Telecommunication company.
+From my prediction modeling analysis, The XGBoost Classifier model had a recall score of `0.82`, while the Gradient Boosting model achieved a recall score of `0.81`. However, the Gradient Boosting model had a higher AUC score of `0.921`, while the XGBoost model had an AUC score of `0.911`. I was able to meet all my set objectives, which were to build a customer churn prediction model with a recall score of 0.8 and above, and to identify the key features that contribute significantly to customer churn, which include `Customer_Service_Calls`, `Total_Day_Charge`, and `International_Plan`. Due to the nature of the project and the prediction problem, I would recommend the `XGBoost classifier model` with a higher recall for predicting customer churn rates at SyriaTel Telecommunication company.
 
 ## 💼 Business Recommendations
 1. **Targeted Incentives for High-Churn Area Codes**
@@ -139,7 +139,7 @@ By leveraging these insights and recommendations, SyriaTel will be able to imple
 2. Model deployment:
     - Export the trained model, along with iany preprocessing steps (scalers, encoders, feature-engineering pipelines), and freeze the exact python library versions (`pip freeze`), to ensure consistency between training and production.
 
-    - Create a Docker container that contains all the python and ML dependencies, and use tools like **Docker Compose** or `Kubernetes` to define the operation of the container.
+    - Create a Docker container that contains all the python and ML dependencies, and use tools like `Docker Compose` or `Kubernetes` to define the operation of the container.
 
     - Wrap the model in a lightweight web framework such as `FastAPI` (This will be explored further).
 
@@ -167,6 +167,8 @@ By leveraging these insights and recommendations, SyriaTel will be able to imple
 - `images/`: Contains visualization images used in the README file
 
 - `models/`: Contains the different ML models implemented in the project
+
+- `reports/`: Contains the project documentations, including the stakeholder slide deck, and the CRISP DM documentation.
 
 - `.gitignore`: Omits some files and directories from being tracked by Git
 
