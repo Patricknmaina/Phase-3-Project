@@ -13,3 +13,6 @@ venv/
 
 # pychache folder
 __pycache__/
+
+# virtual documents
+.virtual_documents/
